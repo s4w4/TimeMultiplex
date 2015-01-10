@@ -5,6 +5,7 @@ import java.net.DatagramPacket;
 import java.net.InetAddress;
 import java.net.MulticastSocket;
 import java.net.UnknownHostException;
+import java.nio.ByteBuffer;
 
 public class Sender extends Thread{
 
@@ -30,7 +31,15 @@ public class Sender extends Thread{
             //**************************
             // EXAMPLE PACKAGE
             byte[] data = new byte[BYTE_LENGTH];
-            for (int i = 0; i < data.length; i++)
+            data[0] = (byte) 'H';
+            data[1] = (byte) 'a';
+            data[2] = (byte) 'l';
+            data[3] = (byte) 'l';
+            data[4] = (byte) 'o';
+            
+            
+            System.out.println(data[0]);
+            for (int i = 5; i < data.length; i++)
                 data[i] = (byte) i;
             //**************************
             datagramPacket.setData(data);

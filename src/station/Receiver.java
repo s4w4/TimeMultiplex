@@ -21,11 +21,13 @@ public class Receiver extends Thread{
         while (true){
             try {
                 multicastSocket.receive(datagramPacket);
-
-                byte[] data = datagramPacket.getData();
-                for (int i = 0 ; i < data.length; i++)
-                    System.out.print(data[i]);
-                System.out.println();
+                
+//                byte[] data = datagramPacket.getData();
+                Message message = new Message(byteArray); 
+                System.out.println(message.getStationClass());
+//                for (int i = 0 ; i < data.length; i++)
+//                    System.out.print(data[i]);
+//                System.out.println();
 
             } catch (IOException e) {
                 e.printStackTrace();

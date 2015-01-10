@@ -1,30 +1,11 @@
 package station;
 
+import java.nio.ByteBuffer;
+import static station.PackageOrder.*; 
 public class Message {
 	
-	/**
-	 * Format und Semangtik der Nachrichtenpackete
-	 * 
-	 * Byte 0:
-	 * Stationsklasse ('A' oder 'B')
-	 * 
-	 * Byte 1 – 24:
-	 * Nutzdaten. (Darin Byte 1 – 10: Name der sendenden Station.)
-	 * 
-	 * Byte 25:
-	 * Nummer des Slots, in dem die Station im nächsten Frame senden wird.
-	 * 
-	 * Byte 26 – 33:
-	 * Zeitpunkt, zu dem dieses Paket gesendet wurde. Einheit: Millisekunden
-	 * seit dem 1.1.1970 als 8-Byte Integer, Big Endian.
-	 * 
-	 * 
-	 * Gesamtlänge: 34 Bytes
-	 * 
-	 */
-	
 	// Stationklass
-	private char stationClass; 
+	private String stationClass; 
 	// Nutzdaten
 	private byte[] data; 
 	// reservierte Slot im naechsten Frame
@@ -33,18 +14,34 @@ public class Message {
 	private long sendTime;
 	
 	
-	public Message(char stationClass) {
+	public Message(String stationClass) {
 		super();
 		this.stationClass = stationClass;
 	}
+	
+	
+	public Message(byte[] messageInByteArray){
 
+		ByteBuffer stationClassBuffer = ByteBuffer.wrap(messageInByteArray, STATION_CLASS.getOffset(), STATION_CLASS.getLength());
+		stationClass=""; 
+		for (int i = 0; i < STATION_CLASS.getLength(); i++) {
+			stationClass += (char) stationClassBuffer.get();
+		}
+		
+		
+		
+		
+		System.out.println("*******");
+		
+	}
 
-	public char getStationClass() {
+	
+	public String getStationClass() {
 		return stationClass;
 	}
 
 
-	public void setStationClass(char stationClass) {
+	public void setStationClass(String stationClass) {
 		this.stationClass = stationClass;
 	}
 
@@ -77,5 +74,7 @@ public class Message {
 	public void setSendTime(long sendTime) {
 		this.sendTime = sendTime;
 	}
+	
+
 	
 }
