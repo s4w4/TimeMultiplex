@@ -9,27 +9,57 @@ import station.datasource.DataSourceReader;
 
 public class Station extends Thread {
 
-	/** Time To Life in sekunden */
+	/** 
+	 * Time To Life in sekunden 
+	 */
 	private final int TTL_IN_SEC = 1;
-	/** Wartezeit des Senders in millisekunden */
+	
+	/** 
+	 * Wartezeit des Senders in millisekunden 
+	 */
 	private final long SENDER_WAIT_TIME_IN_MILLISEC = 1000;
 
-	/** Netzwerkinterface Name */
+	/** 
+	 * Netzwerkinterfacename 
+	 */
 	private String interfaceName;
-	/** Multicast Adresse */
+	
+	/** 
+	 * Multicast Adresse
+	 */
 	private String mcastAddress;
-	/** Port auf den gelauscht wird */
+	
+	/** 
+	 * Port auf den gelauscht wird
+	 */
 	private int receivePort;
-	/** Stationklasse */
+	
+	/** 
+	 * Stationklasse
+	 */
 	private String stationClass;
 
-	/** DatenSourceReader */
+	/** 
+	 * DatenSourceReader
+	 */
 	private DataSourceReader dataSourceReader;
-	/** Sender */
+	
+	/** 
+	 * Sender
+	 */
 	private Sender sender;
-	/** Multicastsocket */
+	
+	/** 
+	 * Multicastsocket
+	 */
 	private MulticastSocket multicastSocket;
 
+	/**
+	 * Empfänger
+	 */
+	private Receiver receiver;
+
+	
 	public Station(String interfaceName, String mcastAddress, int receivePort,
 			String stationClass) {
 		this.interfaceName = interfaceName;
@@ -54,12 +84,13 @@ public class Station extends Thread {
 		}
 
 		// Create Receiver
-
+		this.receiver = new Receiver(multicastSocket);
+		
 		// TODO: Create Output (Datensenke)
 	}
 
 	@Override
 	public void run() {
-
+		
 	}
 }
