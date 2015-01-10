@@ -91,6 +91,8 @@ public class Station extends Thread {
 
 	@Override
 	public void run() {
+		this.sender.start();
 		
+		this.receiver.start();
 	}
 }
