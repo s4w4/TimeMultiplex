@@ -68,7 +68,8 @@ public class Station extends Thread {
 		this.stationClass = stationClass;
 
 		// Create DataSourceReader
-		this.dataSourceReader = new DataSourceReader();
+		this.dataSourceReader = new DataSourceReader(this);
+		this.dataSourceReader.start();
 
 		// Create Sender
 		try {

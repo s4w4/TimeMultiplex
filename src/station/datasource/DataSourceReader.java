@@ -3,7 +3,18 @@ package station.datasource;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
+import station.Station;
+
 public class DataSourceReader extends Thread{
+	
+	/** 
+	 * Station
+	 */
+	private Station station;
+
+	public DataSourceReader(Station station){
+		this.station = station;
+	}
 	
 	public void run() {		
 		InputStreamReader input = new InputStreamReader(System.in);
@@ -12,9 +23,8 @@ public class DataSourceReader extends Thread{
 			try {
 				
 				input.read(dataBuffer);
-				for (int i = 0; i < 24; i++)
-					System.out.print(dataBuffer[i]);			
-				System.out.println();
+				printCharArray(dataBuffer);	//ausgabe
+				
 				
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
@@ -23,4 +33,14 @@ public class DataSourceReader extends Thread{
 		}
 	}
 	
+	
+	/**
+	 * gibt ein CharArray in Console aus
+	 * @param charArray
+	 */
+	private void printCharArray(char[] charArray){
+		for (int i = 0; i < 24; i++)
+			System.out.print(charArray[i]);			
+		System.out.println();
+	}
 }
