@@ -28,19 +28,18 @@ public class Sender extends Thread{
     public void run() {
         try {
             Thread.sleep(waitTime);
-            //**************************
-            // EXAMPLE PACKAGE
-            byte[] data = new byte[BYTE_LENGTH];
-            data[0] = (byte) 'A';
             
-            System.out.println(data[0]);
-            for (int i = 1; i < 24; i++)
-                data[i] = (byte) i;
-            data[25] = 25; 
-            ByteBuffer.wrap(data, 26, 8).putLong(System.currentTimeMillis());
-            System.out.println(System.currentTimeMillis());
-            //**************************
-            datagramPacket.setData(data);
+            byte[] data = new byte[PackageOrder.DATA.length()];
+            for (int i = 0; i < data.length; i++){
+                data[i] = (byte) 0;
+                System.out.print(data[i]);
+            }
+            System.out.println("");
+            Message message = new Message('B');
+            message.setData(data);
+            message.setReservedSlot((byte) 25);
+            message.setSendTime(System.currentTimeMillis());
+            datagramPacket.setData(message.toByteArray());
             multicastSocket.send(datagramPacket);
         } catch (InterruptedException e) {
             e.printStackTrace();

@@ -6,53 +6,53 @@ import java.nio.IntBuffer;
 import static station.PackageOrder.*; 
 public class Message {
 	
+	
+    private static final int BYTE_LENGTH = 34;
 	// Stationklass
-	private String stationClass; 
+	private char stationClass; 
 	// Nutzdaten
 	private byte[] data; 
 	// reservierte Slot im naechsten Frame
-	private int reservedSlot; 
+	private byte reservedSlot; 
 	// Zeitstemple, wann Packet abgeschickt wurde
 	private long sendTime;
+	private byte[] messageInByteArray = new byte[BYTE_LENGTH];;
 	
 	
-	public Message(String stationClass) {
+	public Message(char stationClass) {
 		super();
-		this.stationClass = stationClass;
+		setStationClass(stationClass);
 	}
 	
 	
 	public Message(byte[] messageInByteArray){
+		this.messageInByteArray = messageInByteArray;
 
-		ByteBuffer stationClassBuffer = ByteBuffer.wrap(messageInByteArray, STATION_CLASS.from(), STATION_CLASS.length());
-		stationClass=""; 
-		for (int i = 0; i < STATION_CLASS.length(); i++) {
-			stationClass += (char) stationClassBuffer.get();
-		}
+		stationClass = (char) this.messageInByteArray[STATION_CLASS.from()]; 
 		
-				
-		ByteBuffer dataBuffer = ByteBuffer.wrap(messageInByteArray, DATA.from(), DATA.length());
-		data = new byte[DATA.length()];
-		for (int i = 0; i < DATA.length(); i++) {
-			data[i] = (byte) dataBuffer.get(i);
+		data = new byte[DATA.length()];	
+		for(int i=DATA.from(); i<DATA.length(); i++){
+			data[i] = (byte) messageInByteArray[i];	
 		}
-		
-//		reservedSlot = ByteBuffer.wrap(messageInByteArray, RESERVED_SLOT.getOffset(), RESERVED_SLOT.getLength()).getInt();
-		System.out.println(RESERVED_SLOT.from() + " " + messageInByteArray[RESERVED_SLOT.from()]);
-		reservedSlot = (Byte) messageInByteArray[RESERVED_SLOT.from()]; 
 					
-		sendTime = ByteBuffer.wrap(messageInByteArray, SEND_TIME.from(), SEND_TIME.length()).asLongBuffer().get(); 
-		System.out.println("reserved = " + reservedSlot);
+		reservedSlot = (byte) this.messageInByteArray[RESERVED_SLOT.from()]; 
+					
+		sendTime = ByteBuffer.wrap(this.messageInByteArray, SEND_TIME.from(), SEND_TIME.length()).asLongBuffer().get(); 
 		
+	}
+	
+	public byte[] toByteArray(){
+		return messageInByteArray; 
 	}
 
 	
-	public String getStationClass() {
+	public char getStationClass() {
 		return stationClass;
 	}
 
 
-	public void setStationClass(String stationClass) {
+	public void setStationClass(char stationClass) {
+		messageInByteArray[STATION_CLASS.from()] = (byte) stationClass; 
 		this.stationClass = stationClass;
 	}
 
@@ -63,6 +63,11 @@ public class Message {
 
 
 	public void setData(byte[] data) {
+		  for (int i = 0; i < DATA.length(); i++){
+	        	messageInByteArray[DATA.from()+i] = (byte) data[i];
+	        	System.out.print(messageInByteArray[i]);
+		  }
+		  System.out.println();
 		this.data = data;
 	}
 
@@ -72,7 +77,8 @@ public class Message {
 	}
 
 
-	public void setReservedSlot(int reservedSlot) {
+	public void setReservedSlot(byte reservedSlot) {
+        messageInByteArray[RESERVED_SLOT.from()] = reservedSlot;
 		this.reservedSlot = reservedSlot;
 	}
 
@@ -83,6 +89,7 @@ public class Message {
 
 
 	public void setSendTime(long sendTime) {
+        ByteBuffer.wrap(messageInByteArray, SEND_TIME.from(), SEND_TIME.length()).putLong(sendTime);
 		this.sendTime = sendTime;
 	}
 	

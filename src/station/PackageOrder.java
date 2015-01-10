@@ -29,8 +29,8 @@ public enum PackageOrder {
 	private int from;
 	private int to;
 
-	private PackageOrder(int offset, int length) {
-		this.from = offset;
+	private PackageOrder(int from, int length) {
+		this.from = from;
 		this.length = length;
 	}
 

@@ -6,7 +6,6 @@ import java.net.InetAddress;
 import java.net.MulticastSocket;
 import java.net.NetworkInterface;
 
-// TestSawa
 public class App2 {
     private static final int PORT = 16000;
     private static final int TTL_IN_SEC = 1;
