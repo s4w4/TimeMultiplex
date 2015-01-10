@@ -9,7 +9,7 @@ import java.net.NetworkInterface;
 public class App2 {
     private static final int PORT = 16000;
     private static final int TTL_IN_SEC = 1;
-    private static final String INTERFACE_NAME = "eth2";
+    private static final String INTERFACE_NAME = "eth0";
     private static final String MULTICASTADDRESS = "225.10.1.2";
 
     public static void main(String[] args){
@@ -23,10 +23,11 @@ public class App2 {
 
             System.out.println("-------------Senden---------------");
             Sender sender = new Sender(multicastSocket,1000,MULTICASTADDRESS,PORT);
-
+            sender.start();
+            
             System.out.println("-------------Empfangen---------------");
             Receiver receiver = new Receiver(multicastSocket);
-
+            receiver.start();
         } catch (IOException e) {
             e.printStackTrace();
         }
