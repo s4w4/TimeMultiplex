@@ -1,6 +1,8 @@
 package station;
 
 import java.nio.ByteBuffer;
+import java.nio.IntBuffer;
+
 import static station.PackageOrder.*; 
 public class Message {
 	
@@ -22,16 +24,25 @@ public class Message {
 	
 	public Message(byte[] messageInByteArray){
 
-		ByteBuffer stationClassBuffer = ByteBuffer.wrap(messageInByteArray, STATION_CLASS.getOffset(), STATION_CLASS.getLength());
+		ByteBuffer stationClassBuffer = ByteBuffer.wrap(messageInByteArray, STATION_CLASS.from(), STATION_CLASS.length());
 		stationClass=""; 
-		for (int i = 0; i < STATION_CLASS.getLength(); i++) {
+		for (int i = 0; i < STATION_CLASS.length(); i++) {
 			stationClass += (char) stationClassBuffer.get();
 		}
 		
+				
+		ByteBuffer dataBuffer = ByteBuffer.wrap(messageInByteArray, DATA.from(), DATA.length());
+		data = new byte[DATA.length()];
+		for (int i = 0; i < DATA.length(); i++) {
+			data[i] = (byte) dataBuffer.get(i);
+		}
 		
-		
-		
-		System.out.println("*******");
+//		reservedSlot = ByteBuffer.wrap(messageInByteArray, RESERVED_SLOT.getOffset(), RESERVED_SLOT.getLength()).getInt();
+		System.out.println(RESERVED_SLOT.from() + " " + messageInByteArray[RESERVED_SLOT.from()]);
+		reservedSlot = (Byte) messageInByteArray[RESERVED_SLOT.from()]; 
+					
+		sendTime = ByteBuffer.wrap(messageInByteArray, SEND_TIME.from(), SEND_TIME.length()).asLongBuffer().get(); 
+		System.out.println("reserved = " + reservedSlot);
 		
 	}
 

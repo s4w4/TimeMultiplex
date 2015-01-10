@@ -31,16 +31,14 @@ public class Sender extends Thread{
             //**************************
             // EXAMPLE PACKAGE
             byte[] data = new byte[BYTE_LENGTH];
-            data[0] = (byte) 'H';
-            data[1] = (byte) 'a';
-            data[2] = (byte) 'l';
-            data[3] = (byte) 'l';
-            data[4] = (byte) 'o';
-            
+            data[0] = (byte) 'A';
             
             System.out.println(data[0]);
-            for (int i = 5; i < data.length; i++)
+            for (int i = 1; i < 24; i++)
                 data[i] = (byte) i;
+            data[25] = 25; 
+            ByteBuffer.wrap(data, 26, 8).putLong(System.currentTimeMillis());
+            System.out.println(System.currentTimeMillis());
             //**************************
             datagramPacket.setData(data);
             multicastSocket.send(datagramPacket);
