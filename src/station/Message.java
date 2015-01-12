@@ -12,7 +12,7 @@ public class Message {
 	// Stationklass
 	private char stationClass; 
 	// Nutzdaten
-	private byte[] data; 
+	private char[] data; 
 	// reservierte Slot im naechsten Frame
 	private byte reservedSlot; 
 	// Zeitstemple, wann Packet abgeschickt wurde
@@ -33,9 +33,9 @@ public class Message {
 
 		stationClass = (char) this.messageInByteArray[STATION_CLASS.from()]; 
 		
-		data = new byte[DATA.length()];	
+		data = new char[DATA.length()];	
 		for(int i=DATA.from(); i<DATA.length(); i++){
-			data[i] = (byte) messageInByteArray[i];	
+			data[i] = (char) messageInByteArray[i];	
 		}
 					
 		reservedSlot = (byte) this.messageInByteArray[RESERVED_SLOT.from()]; 
@@ -93,12 +93,12 @@ public class Message {
 	}
 
 
-	public byte[] getData() {
+	public char[] getData() {
 		return data;
 	}
 
 
-	public void setData(byte[] data) {
+	public void setData(char[] data) {
 		  for (int i = 0; i < DATA.length(); i++){
 	        	messageInByteArray[DATA.from()+i] = (byte) data[i];
 //	        	System.out.print(messageInByteArray[i]);

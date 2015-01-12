@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Random;
 
 public class MessageManager {
 
@@ -20,12 +21,16 @@ public class MessageManager {
 	private Message lastMessage;
 	private List<Byte> freeSlots; 
 	private List<Message> allReceivedMessage;
+	private Random random;
+	private Message ownMessage;
+	private byte reservedSlot = 0;
 	
 	public MessageManager(Logger logger, ClockManager clockManager) {
 		this.logger = logger;
 		this.clockManager = clockManager;
 		this.allReceivedMessage = new ArrayList<Message>();
 		this.freeSlots = resetFreeSlots(clockManager.getSlotCount());
+		this.random = new Random();
 	}
 
 	/**
@@ -70,6 +75,10 @@ public class MessageManager {
 		}
 		lastMessage.setKollision(true);
 		currentMessage.setKollision(true);
+		
+		if (this.ownMessage != null && currentMessage.getSendingSlot() == this.ownMessage.getSendingSlot()) {
+			this.ownMessage.setKollision(true);
+		}
 	}
 
 	/**
@@ -86,16 +95,54 @@ public class MessageManager {
 		this.freeSlots = resetFreeSlots(clockManager.getSlotCount());
 		logger.printMessages(allReceivedMessage);
 		this.allReceivedMessage = new ArrayList<Message>();
+		this.ownMessage = null;
 	}
 
 	public boolean isOwnKollision() {
-		// TODO  isOwnKollision
-		return false;
+		if (this.ownMessage == null) {
+			return false;
+		}
+		return this.ownMessage.isKollision();
 	}
 
+	/**
+	 * @param ownMessage the ownMessage to set
+	 */
+	public void setOwnMessage(Message ownMessage) {
+		this.ownMessage = ownMessage;
+	}
+
+	/**
+	 * prüft ob es noch es noch freie Slots gibt
+	 * @return
+	 */
 	public boolean isFreeSlotNextFrame() {
-		// TODO isFreeSlotNextFrame
-		return false;
+		return freeSlots.size() > 0;
 	}
 
+	/**
+	 * Waehlt einen freien zufaelligen Slot aus 
+	 * @return
+	 */
+	public byte getFreeSlot() {
+		if (this.reservedSlot > 0) 
+			return reservedSlot ;
+		else
+			return calcNewSlot();
+	}
+
+	public byte calcNewSlot() { 
+		resetLastReceivedSlot();
+		return freeSlots.get(random.nextInt(freeSlots.size()));
+	}
+ 
+
+	/**
+	 * @param lastReceivedSlot the lastReceivedSlot to set
+	 */
+	public void resetLastReceivedSlot( ) {
+		this.lastReceivedSlot = 0;
+	}
+
+	
 }

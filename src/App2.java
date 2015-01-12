@@ -25,8 +25,8 @@ public class App2 {
             multicastSocket.joinGroup(InetAddress.getByName(MULTICASTADDRESS));
 
             System.out.println("-------------Senden---------------");
-            Sender sender = new Sender(multicastSocket,1000,MULTICASTADDRESS,PORT);
-            sender.start();
+//            Sender sender = new Sender(multicastSocket,1000,MULTICASTADDRESS,PORT);
+//            sender.start();
             
             System.out.println("-------------Empfangen---------------");
             Logger logger = new Logger();

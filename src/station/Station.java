@@ -92,6 +92,7 @@ public class Station extends Thread {
 			/****************************************************************
 			 * Initialphase
 			 ****************************************************************/
+			System.out.println("============== INITIAL PHASE ==============");
 			// Create Logger (Datensenke)
 			this.logger = new Logger();
 			// Create ClockManager
@@ -116,7 +117,8 @@ public class Station extends Thread {
 			/****************************************************************
 			 * Ablaufphase
 			 ****************************************************************/
-			this.dataSourceListener.start();
+			System.out.println("============== ABLAUF PHASE ==============");
+			this.dataSourceListener.start(); 
 			this.receiver.start();
 			 
 			startPhase();
@@ -124,18 +126,20 @@ public class Station extends Thread {
 			resetFrame();
 			
 			listeningPhase();
-			
+
 			do {
 				
 				if (this.clockManager.isStartFrame()) {
 					
 					if (this.messageManager.isOwnKollision() || !this.messageManager.isFreeSlotNextFrame()) {
+						messageManager.resetLastReceivedSlot();
 						resetFrame();
 					}else {
 						sendingPhase();
 					}
 					
-				}else {
+				}else { 					
+					messageManager.resetLastReceivedSlot();
 					resetFrame();
 					startPhase();
 					resetFrame();
@@ -143,7 +147,7 @@ public class Station extends Thread {
 				
 				listeningPhase();
 				
-			} while (finish);
+			} while (!finish);
 			  
 
 		} catch (IOException e) {
@@ -156,18 +160,28 @@ public class Station extends Thread {
 	}
 
 	private void sendingPhase() {
-		// TODO Auto-generated method stub
-		
+		System.out.println("sending Phase");
+
+		byte freeSlot = this.messageManager.getFreeSlot();
+		this.resetFrame();
+		Sender sender = new Sender(dataManager, messageManager, clockManager, multicastSocket, freeSlot, mcastAddress, receivePort, stationClass);
+		sender.start();
 	}
 
 	private void listeningPhase() throws InterruptedException {
+		System.out.println("listening Phase");
+
 		do {
 			Thread.sleep(this.clockManager.calcToNextFrameInMS());
 			this.clockManager.sync();			
-		} while (!this.clockManager.isEOF());
+			System.out.println("****"+(clockManager.getCorrectedTimeInMS()%1000));
+		} while (!this.clockManager.isEOF());		
+		System.out.println("****Ende");
 	}
 
 	private void startPhase() throws InterruptedException {
+		System.out.println("start Phase");
+
 		do {
 			Thread.sleep(this.clockManager.calcToNextFrameInMS());
 			this.clockManager.sync();			
@@ -178,6 +192,8 @@ public class Station extends Thread {
 	 * Setzt Startwert auf Anfangswert
 	 */
 	private void resetFrame() {
+		System.out.println("reset Frame");
+
 		this.messageManager.resetFrame();
 		this.clockManager.resetFrame();
 	}
@@ -189,4 +205,13 @@ public class Station extends Thread {
 		this.finish = true;
 	}
 
+	public static void main(String[] args) {
+		String paramInterfaceName = args[0];
+		String paramMcastAddress = args[1];
+		int paramReceivePort = Integer.parseInt(args[2]);
+		char paramStationClass = args[3].charAt(0);
+		long paramUtcOffsetInMS = Long.parseLong(args[4]);
+		
+		new Station(paramInterfaceName, paramMcastAddress, paramReceivePort, paramStationClass, paramUtcOffsetInMS).start();
+	}
 }

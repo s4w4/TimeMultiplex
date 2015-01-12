@@ -9,6 +9,7 @@ import station.Station;
 public class DataSourceListener extends Thread{
 	 
 
+	private final int DATA_SIZE = 24;
 	private DataManager dataManager;
 
 
@@ -19,11 +20,12 @@ public class DataSourceListener extends Thread{
 	public void run() {		
 		InputStreamReader input = new InputStreamReader(System.in);
 		while(true){
-			char[] dataBuffer = new char[24];
+			char[] dataBuffer = new char[DATA_SIZE];
 			try {
 				
 				input.read(dataBuffer);
-				printCharArray(dataBuffer);	//ausgabe
+				dataManager.setDataBuffer(dataBuffer);
+//				printCharArray(dataBuffer);	//ausgabe
 				 
 			} catch (IOException e) { 
 				e.printStackTrace();
