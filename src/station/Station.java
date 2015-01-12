@@ -132,14 +132,14 @@ public class Station extends Thread {
 				if (this.clockManager.isStartFrame()) {
 					
 					if (this.messageManager.isOwnKollision() || !this.messageManager.isFreeSlotNextFrame()) {
-						messageManager.resetLastReceivedSlot();
+//						messageManager.resetLastReceivedSlot();
 						resetFrame();
 					}else {
 						sendingPhase();
 					}
 					
 				}else { 					
-					messageManager.resetLastReceivedSlot();
+					messageManager.setReservedSlot((byte)0);
 					resetFrame();
 					startPhase();
 					resetFrame();
@@ -174,9 +174,9 @@ public class Station extends Thread {
 		do {
 			Thread.sleep(this.clockManager.calcToNextFrameInMS());
 			this.clockManager.sync();			
-			System.out.println("****"+(clockManager.getCorrectedTimeInMS()%1000));
+//			System.out.println("****"+(clockManager.getCorrectedTimeInMS()%1000));
 		} while (!this.clockManager.isEOF());		
-		System.out.println("****Ende");
+//		System.out.println("****Ende");
 	}
 
 	private void startPhase() throws InterruptedException {

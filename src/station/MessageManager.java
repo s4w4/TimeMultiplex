@@ -125,24 +125,39 @@ public class MessageManager {
 	 * @return
 	 */
 	public byte getFreeSlot() {
-		if (this.reservedSlot > 0) 
+		if (this.reservedSlot > 0){ 
+			System.out.println("RESERVED SLOT : "+reservedSlot);
 			return reservedSlot ;
-		else
-			return calcNewSlot();
+		}
+		else{
+			byte cS = calcNewSlot();
+			System.out.println("CALC SLOT: "+cS);
+			return cS;
+		}
 	}
 
 	public byte calcNewSlot() { 
-		resetLastReceivedSlot();
 		return freeSlots.get(random.nextInt(freeSlots.size()));
+	}
+
+	/**
+	 * @return the reservedSlot
+	 */
+	public byte getReservedSlot() {
+		return reservedSlot;
+	}
+
+	/**
+	 * @param reservedSlot the reservedSlot to set
+	 */
+	public void setReservedSlot(byte reservedSlot) {
+		this.reservedSlot = reservedSlot;
 	}
  
 
-	/**
-	 * @param lastReceivedSlot the lastReceivedSlot to set
-	 */
-	public void resetLastReceivedSlot( ) {
-		this.lastReceivedSlot = 0;
-	}
+	
+ 
 
+	
 	
 }
