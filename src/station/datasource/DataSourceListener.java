@@ -3,17 +3,17 @@ package station.datasource;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
+import station.DataManager;
 import station.Station;
 
-public class DataSourceReader extends Thread{
-	
-	/** 
-	 * Station
-	 */
-	private Station station;
+public class DataSourceListener extends Thread{
+	 
 
-	public DataSourceReader(Station station){
-		this.station = station;
+	private DataManager dataManager;
+
+
+	public DataSourceListener(DataManager dataManager ){ 
+		this.dataManager = dataManager;
 	}
 	
 	public void run() {		
@@ -24,10 +24,8 @@ public class DataSourceReader extends Thread{
 				
 				input.read(dataBuffer);
 				printCharArray(dataBuffer);	//ausgabe
-				
-				
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
+				 
+			} catch (IOException e) { 
 				e.printStackTrace();
 			} 
 		}

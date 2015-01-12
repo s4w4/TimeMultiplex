@@ -32,9 +32,9 @@ public class Sender extends Thread{
             byte[] data = new byte[PackageOrder.DATA.length()];
             for (int i = 0; i < data.length; i++){
                 data[i] = (byte) 0;
-                System.out.print(data[i]);
+//                System.out.print(data[i]);
             }
-            System.out.println("");
+//            System.out.println("");
             Message message = new Message('B');
             message.setData(data);
             message.setReservedSlot((byte) 25);

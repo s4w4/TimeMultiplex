@@ -1,3 +1,6 @@
+import station.ClockManager;
+import station.Logger;
+import station.MessageManager;
 import station.Receiver;
 import station.Sender;
 
@@ -26,7 +29,10 @@ public class App2 {
             sender.start();
             
             System.out.println("-------------Empfangen---------------");
-            Receiver receiver = new Receiver(multicastSocket);
+            Logger logger = new Logger();
+			ClockManager clockManager = new ClockManager(0);
+			MessageManager messageManager = new MessageManager(logger, clockManager);
+			Receiver receiver = new Receiver(multicastSocket, messageManager );
             receiver.start();
         } catch (IOException e) {
             e.printStackTrace();

@@ -2,12 +2,13 @@ package station;
 
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
+import java.util.Arrays;
 
 import static station.PackageOrder.*; 
 public class Message {
 	
 	
-    private static final int BYTE_LENGTH = 34;
+    private final int BYTE_LENGTH = 34;
 	// Stationklass
 	private char stationClass; 
 	// Nutzdaten
@@ -18,6 +19,8 @@ public class Message {
 	private long sendTime;
 	private byte[] messageInByteArray = new byte[BYTE_LENGTH];;
 	
+	private byte sendingSlot;
+	private boolean kollision = false;
 	
 	public Message(char stationClass) {
 		super();
@@ -41,6 +44,39 @@ public class Message {
 		
 	}
 	
+	
+	/**
+	 * @return the sendingSlot
+	 */
+	public byte getSendingSlot() {
+		return sendingSlot;
+	}
+
+
+	/**
+	 * @param sendingSlot the sendingSlot to set
+	 */
+	public void setSendingSlot(byte sendingSlot) {
+		this.sendingSlot = sendingSlot;
+	}
+
+
+	/**
+	 * @return the kollision
+	 */
+	public boolean isKollision() {
+		return kollision;
+	}
+
+
+	/**
+	 * @param kollision the kollision to set
+	 */
+	public void setKollision(boolean kollision) {
+		this.kollision = kollision;
+	}
+
+
 	public byte[] toByteArray(){
 		return messageInByteArray; 
 	}
@@ -65,14 +101,14 @@ public class Message {
 	public void setData(byte[] data) {
 		  for (int i = 0; i < DATA.length(); i++){
 	        	messageInByteArray[DATA.from()+i] = (byte) data[i];
-	        	System.out.print(messageInByteArray[i]);
+//	        	System.out.print(messageInByteArray[i]);
 		  }
-		  System.out.println();
+//		  System.out.println();
 		this.data = data;
 	}
 
 
-	public int getReservedSlot() {
+	public byte getReservedSlot() {
 		return reservedSlot;
 	}
 
@@ -91,6 +127,18 @@ public class Message {
 	public void setSendTime(long sendTime) {
         ByteBuffer.wrap(messageInByteArray, SEND_TIME.from(), SEND_TIME.length()).putLong(sendTime);
 		this.sendTime = sendTime;
+	}
+
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "Message [\nstationClass=" + stationClass + ", \ndata="
+				+ Arrays.toString(data) + ", \nreservedSlot=" + reservedSlot
+				+ ", \nsendTime=" + sendTime + ", \nsendingSlot=" + sendingSlot
+				+ ", \nkollision=" + kollision + "]";
 	}
 	
 

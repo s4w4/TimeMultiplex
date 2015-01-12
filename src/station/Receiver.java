@@ -9,9 +9,11 @@ public class Receiver extends Thread{
     private DatagramPacket datagramPacket;
     private byte[] byteArray;
     private MulticastSocket multicastSocket;
+	private MessageManager messageManager;
 
-    public Receiver(MulticastSocket multicastSocket) {
+    public Receiver(MulticastSocket multicastSocket, MessageManager messageManager) {
         this.multicastSocket = multicastSocket;
+        this.messageManager = messageManager;
         this.byteArray = new byte[BYTE_LENGTH];
         this.datagramPacket = new DatagramPacket(byteArray, BYTE_LENGTH);
     }
@@ -21,17 +23,8 @@ public class Receiver extends Thread{
         while (true){
             try {
             	//auf Nachricht warten
-                multicastSocket.receive(datagramPacket);
-                byte[] data = datagramPacket.getData();
-                Message message = new Message(data); 
-                System.out.println("Stationclass = " + message.getStationClass());
-                System.out.println("Reservedport = " + message.getReservedSlot());
-                System.out.println("SendTime=" + message.getSendTime());
-                byte[] dataMessage = message.getData();
-                System.out.println("Data");
-                for (int i = 0; i < dataMessage.length; i++) {
-					System.out.print(dataMessage[i]+ " ");
-				}
+                multicastSocket.receive(datagramPacket);  
+                this.messageManager.receivedMessage(new Message(byteArray));
             } catch (IOException e) {
                 e.printStackTrace();
             }
