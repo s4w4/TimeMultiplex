@@ -123,7 +123,7 @@ public class Station extends Thread {
 			 
 			startPhase();
 			
-			resetFrame();
+//			resetFrame();
 			
 			listeningPhase();
 
@@ -142,7 +142,7 @@ public class Station extends Thread {
 					messageManager.setReservedSlot((byte)0);
 					resetFrame();
 					startPhase();
-					resetFrame();
+//					resetFrame();
 				}
 				
 				listeningPhase();
@@ -160,8 +160,6 @@ public class Station extends Thread {
 	}
 
 	private void sendingPhase() {
-		System.out.println("sending Phase");
-
 		byte freeSlot = this.messageManager.getFreeSlot();
 		this.resetFrame();
 		Sender sender = new Sender(dataManager, messageManager, clockManager, multicastSocket, freeSlot, mcastAddress, receivePort, stationClass);
@@ -169,22 +167,19 @@ public class Station extends Thread {
 	}
 
 	private void listeningPhase() throws InterruptedException {
-		System.out.println("listening Phase");
-
 		do {
 			Thread.sleep(this.clockManager.calcToNextFrameInMS());
 			this.clockManager.sync();			
-//			System.out.println("****"+(clockManager.getCorrectedTimeInMS()%1000));
 		} while (!this.clockManager.isEOF());		
-//		System.out.println("****Ende");
 	}
 
 	private void startPhase() throws InterruptedException {
-		System.out.println("start Phase");
-
 		do {
 			Thread.sleep(this.clockManager.calcToNextFrameInMS());
 			this.clockManager.sync();			
+			if (this.clockManager.isEOF()) {
+				resetFrame();
+			}
 		} while (!this.clockManager.isEOF() && !this.clockManager.isStartFrame());
 	}
 
@@ -192,8 +187,6 @@ public class Station extends Thread {
 	 * Setzt Startwert auf Anfangswert
 	 */
 	private void resetFrame() {
-		System.out.println("reset Frame");
-
 		this.messageManager.resetFrame();
 		this.clockManager.resetFrame();
 	}
